@@ -24,6 +24,7 @@ class AutoClickerGUI:
         self.blatant_var_right = tk.BooleanVar(value=False)
         self.hold_mode_left = tk.BooleanVar(value=True) 
         self.hold_mode_right = tk.BooleanVar(value=True)
+        self.ignore_next = False
         
         self.left_trigger_key = Button.x2
         self.right_trigger_key = Button.x1
@@ -186,10 +187,10 @@ class AutoClickerGUI:
 
             try:
                 if self.keys_match(key, self.left_trigger_key):
-                    if self.hold_mode_left.get() and not self.ignore_next_release:
+                    if self.hold_mode_left.get() and not self.ignore_next:
                         self.left_clicking = True
                 elif self.keys_match(key, self.right_trigger_key):
-                    if self.hold_mode_right.get() and not self.ignore_next_release:
+                    if self.hold_mode_right.get() and not self.ignore_next:
                         self.right_clicking = True
                 elif self.keys_match(key, self.quit_key):
                     self.root.after(0, self.root.quit)
@@ -200,15 +201,15 @@ class AutoClickerGUI:
         def on_release(key):
             try:
                 if self.keys_match(key, self.left_trigger_key):
-                    if self.ignore_next_release:
-                        self.ignore_next_release = False
+                    if self.ignore_next:
+                        self.ignore_next = False
                     elif self.hold_mode_left.get():
                         self.left_clicking = False
                     else:
                         self.left_clicking = not self.left_clicking
                 elif self.keys_match(key, self.right_trigger_key):
-                    if self.ignore_next_release:
-                        self.ignore_next_release = False
+                    if self.ignore_next:
+                        self.ignore_next = False
                     elif self.hold_mode_right.get():
                         self.right_clicking = False
                     else:
@@ -224,24 +225,24 @@ class AutoClickerGUI:
             try:
                 if pressed:
                     if self.keys_match(button, self.left_trigger_key):
-                        if self.hold_mode_left.get() and not self.ignore_next_release:
+                        if self.hold_mode_left.get() and not self.ignore_next:
                             self.left_clicking = True
                     elif self.keys_match(button, self.right_trigger_key):
-                        if self.hold_mode_right.get() and not self.ignore_next_release:
+                        if self.hold_mode_right.get() and not self.ignore_next:
                             self.right_clicking = True
                     elif self.keys_match(button, self.quit_key):
                         self.root.after(0, self.root.quit)
                 else:  # Released
                     if self.keys_match(button, self.left_trigger_key):
-                        if self.ignore_next_release:
-                            self.ignore_next_release = False
+                        if self.ignore_next:
+                            self.ignore_next = False
                         elif self.hold_mode_left.get():
                             self.left_clicking = False
                         else:
                             self.left_clicking = not self.left_clicking
                     elif self.keys_match(button, self.right_trigger_key):
-                        if self.ignore_next_release:
-                            self.ignore_next_release = False
+                        if self.ignore_next:
+                            self.ignore_next = False
                         elif self.hold_mode_right.get():
                             self.right_clicking = False
                         else:
@@ -277,10 +278,10 @@ class AutoClickerGUI:
             if self.recorded_key:
                 if key_type == "left":
                     self.left_trigger_key = self.recorded_key
-                    self.ignore_next_release = True  # Set flag when binding changes
+                    self.ignore_next = True  # Set flag when binding changes
                 elif key_type == "right":
                     self.right_trigger_key = self.recorded_key
-                    self.ignore_next_release = True  # Set flag when binding changes
+                    self.ignore_next = True  # Set flag when binding changes
                 elif key_type == "quit":
                     self.quit_key = self.recorded_key
 
